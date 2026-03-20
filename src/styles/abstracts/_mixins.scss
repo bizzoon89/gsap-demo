@@ -1,0 +1,173 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:string';
+@use 'variables' as *;
+@use 'functions' as fn;
+
+@mixin fontface($fontfamily, $filename, $fontweight: normal, $fontstyle: normal) {
+  @font-face {
+    font-family: $fontfamily;
+    src:
+      url('#{$base-font-path}/#{$filename}.woff2') format('woff2'),
+      url('#{$base-font-path}/#{$filename}.woff') format('woff');
+    font-weight: $fontweight;
+    font-style: $fontstyle;
+    font-display: swap;
+  }
+}
+
+/// Mixin helping defining both `width` and `height` simultaneously.
+///
+/// @author Hugo Giraudel
+///
+/// @access public
+///
+/// @param {Length} $width - Element’s `width`
+/// @param {Length} $height ($width) - Element’s `height`
+///
+/// @example scss - Usage
+///   .foo {
+///     @include size(10em);
+///   }
+///
+///   .bar {
+///     @include size(100%, 10em);
+///   }
+///
+/// @example css - CSS output
+///   .foo {
+///     width: 10em;
+///     height: 10em;
+///   }
+///
+///   .bar {
+///     width: 100%;
+///     height: 10em;
+///   }
+///
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+/// font-smothing
+/// @include font-smoothing(on);
+/// @include font-smoothing(off);
+@mixin font-smoothing($value: on) {
+  @if $value == on {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  } @else {
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+  }
+}
+
+/// Hides the text in an element, commonly used to show an image. Some elements will need block-level styles applied.
+///
+/// @link http://zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement
+///
+/// @example scss - Usage
+///   .element {
+///     @include hide-text;
+///   }
+///
+/// @example css - CSS Output
+///   .element {
+///     overflow: hidden;
+///     text-indent: 101%;
+///     white-space: nowrap;
+///   }
+///
+@mixin hide-text {
+  overflow: hidden;
+  text-indent: 101%;
+  white-space: nowrap;
+}
+
+/// Transition css properties
+// usage
+// scss - @include transition(color);
+//     or @include transition(color, 1s, ease-in);
+//     or @include transition(color width);
+//     or @include transition(color width, 1s, linear);
+//
+
+@mixin transition($properties, $duration: $transition-duration-base, $easing: $transition-easing-base) {
+  $list: ();
+  @each $prop in $properties {
+    $str: #{$prop} #{$duration} #{$easing};
+    $list: list.join($list, #{$str}, comma);
+  }
+  transition: $list;
+}
+
+/// Mixin for styling form-placeholders
+/// @example scss - Usage
+///   @include placeholder {
+///    color: #333;
+///   }
+///
+///   input[type='text'],
+///   input[type='tel'],
+///   input[type='email'] {
+///     @include placeholder {
+///      color: red;
+///     }
+///   }
+
+@mixin placeholder {
+  &::placeholder {
+    @content;
+    opacity: 1;
+  }
+}
+
+@mixin font-size($fs-map, $fs-breakpoints: $breakpoints) {
+  @each $fs-breakpoint, $fs-font-size in $fs-map {
+    @if $fs-breakpoint == null {
+      @include make-font-size($fs-font-size);
+    } @else {
+      // If $fs-font-size is a key that exists in
+      // $fs-breakpoints, use the value
+      @if map-has-key($fs-breakpoints, $fs-breakpoint) {
+        $fs-breakpoint: map.get($fs-breakpoints, $fs-breakpoint);
+      }
+      @media screen and (min-width: $fs-breakpoint) {
+        @include make-font-size($fs-font-size);
+      }
+    }
+  }
+}
+
+@mixin media($query) {
+  $parsed: fn.parse-media($query);
+  $operator: list.nth($parsed, 1);
+  $breakpoint: list.nth($parsed, 2);
+
+  $value: map.get($breakpoints, $breakpoint);
+
+  @if not $value {
+    @error "Breakpoint '#{$breakpoint}' not found";
+  }
+
+  @if $operator == '>=' {
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else if $operator == '>' {
+    @media (min-width: ($value + 1px)) {
+      @content;
+    }
+  } @else if $operator == '<=' {
+    @media (max-width: $value) {
+      @content;
+    }
+  } @else if $operator == '<' {
+    @media (max-width: ($value - 1px)) {
+      @content;
+    }
+  } @else {
+    @error "Invalid operator '#{$operator}'";
+  }
+}

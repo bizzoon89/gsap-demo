@@ -1,0 +1,69 @@
+@use 'sass:color';
+@use 'sass:list';
+@use 'sass:math';
+@use 'sass:string';
+@use 'sass:map';
+
+//
+// @functions
+//
+
+@function parse-media($query) {
+  $operators: ('>=', '<=', '>', '<');
+
+  @each $op in $operators {
+    @if string.index($query, $op) == 1 {
+      $key: string.slice($query, string.length($op) + 1);
+      @return ($op, $key);
+    }
+  }
+
+  @error "Invalid media query: #{$query}";
+}
+
+// CONVERT TO REM
+// sass-lint:disable zero-unit
+@function convert-to-rem($value, $base-value: 16) {
+  $value: math.div(strip-unit($value), strip-unit($base-value)) * 1rem;
+  @if ($value == 0) {
+    $value: 0;
+  } // Turn 0rem into 0
+  @return $value;
+}
+
+@function calc-vw($number) {
+  @return math.div(($number * 100vw), 1920);
+}
+
+// REM CALC
+
+// New Syntax, allows to optionally calculate on a different base value to counter compounding effect of rem's.
+// Call with 1, 2, 3 or 4 parameters, 'px' is not required but supported:
+//
+//   rem-calc(10 20 30px 40);
+//
+// Space delimited, if you want to delimit using comma's, wrap it in another pair of brackets
+//
+//   rem-calc((10, 20, 30, 40px));
+//
+// Optionally call with a different base (eg: 8px) to calculate rem.
+//
+//   rem-calc(16px 32px 48px, 8px);
+//
+// If you require to comma separate your list
+//
+//   rem-calc((16px, 32px, 48), 8px);
+
+@function rem-calc($values, $base-value: 16) {
+  $max: list.length($values);
+
+  @if $max == 1 {
+    @return convert-to-rem(list.nth($values, 1), $base-value);
+  }
+
+  $rem-values: ();
+  @for $i from 1 through $max {
+    $rem-values: list.append($rem-values, convert-to-rem(list.nth($values, $i), $base-value));
+  }
+  @return $rem-values;
+}

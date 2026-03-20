@@ -1,0 +1,15 @@
+.text-reveal {
+  margin: 0 0 0 auto;
+  max-width: 512px;
+  line-height: 1.2;
+}
+
+.text-line {
+  display: block;
+  overflow: hidden;
+}
+
+.text-line__inner {
+  display: block;
+  transform: translateY(100%);
+}

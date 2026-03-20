@@ -1,0 +1,27 @@
+@use '../abstracts' as *;
+
+.text-fill {
+  font-size: 35px;
+  line-height: 1.5;
+  font-weight: $font-weight-medium;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.text-line {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.text-line__base {
+  color: $grey;
+}
+
+.text-line__overlay {
+  position: absolute;
+  inset: 0;
+  color: $charcoal-brown;
+
+  clip-path: inset(0 100% 0 0);
+}
