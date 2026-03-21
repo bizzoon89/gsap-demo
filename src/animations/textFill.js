@@ -45,7 +45,7 @@ export const initTextFill = selector => {
       scrollTrigger: {
         trigger: el,
         start: 'top 85%',
-        end: 'top 15%',
+        end: 'top 35%',
         scrub: 1.5,
       },
     });
