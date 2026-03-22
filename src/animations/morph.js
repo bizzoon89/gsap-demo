@@ -11,33 +11,54 @@ export const initMorph = () => {
   const left = section.querySelector('.shape-left');
   const center = section.querySelector('.shape-center');
   const right = section.querySelector('.shape-right');
+  const hole = section.querySelector('.shape-hole');
 
   const texts = section.querySelectorAll('.js-morph-text');
   const title = section.querySelector('.js-morph-title');
   const number = section.querySelector('.screen-number');
 
+  const CONFIG = {
+    size: 178,
+    line: {
+      thickness: 0.22,
+      length: 1.6,
+      angle: -52,
+      offsetY: -20,
+      skewX: -50,
+    },
+    scroll: 4000,
+  };
+
   let current = -1;
 
   // ======================
-  // START POSITIONS (ВАЖЛИВО)
+  // START POSITIONS
   // ======================
-  gsap.set(left, { x: -220 });
-  gsap.set(right, { x: 220 });
-  gsap.set(center, { scale: 1 });
+  gsap.set(left, { x: -CONFIG.size });
+  gsap.set(center, { x: 0 });
+  gsap.set(right, { x: CONFIG.size });
+
+  gsap.set(left, { transformOrigin: 'center center' });
 
   // ======================
-  // COLORS (ЕКРАН 1)
+  // COLORS (SCREEN 1)
   // ======================
-  gsap.set(section, { backgroundColor: '#312926' });
+  const setColors = (bg, text, shape) => {
+    gsap.set(section, { backgroundColor: bg });
 
-  gsap.set('.section--morph h4, .section--morph p, .section-title, .screen-number', { color: '#F9F0E8' });
+    gsap.set('.section--morph h4, .section--morph p, .section-title, .screen-number', { color: text });
 
-  gsap.set(center, { backgroundColor: '#E6D2B5' });
-  gsap.set(right, { backgroundColor: '#E6D2B5' });
-  gsap.set(left, { borderColor: '#E6D2B5' });
+    gsap.set(center, { backgroundColor: shape });
+    gsap.set(right, { backgroundColor: shape });
+    gsap.set(left, { borderColor: shape, backgroundColor: shape });
+
+    gsap.set(hole, { backgroundColor: bg });
+  };
+
+  setColors('#312926', '#F9F0E8', '#E6D2B5');
 
   // ======================
-  // TEXT SWITCH
+  // TEXT
   // ======================
   const showText = i => {
     if (current === i) return;
@@ -70,35 +91,49 @@ export const initMorph = () => {
     scrollTrigger: {
       trigger: section,
       start: 'top top',
-      end: '+=3500',
-      scrub: true,
+      end: `+=${CONFIG.scroll}`,
+      scrub: 1,
       pin: true,
+
+      // 🔥 FIX SNAP
+      snap: {
+        snapTo: progress => {
+          const points = [0, 0.33, 0.66, 1];
+          const threshold = 0.12; // 👈 збільшили
+
+          if (progress > 1 - threshold) return 1;
+
+          return points.reduce((prev, curr) => (Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev));
+        },
+        duration: 0.4,
+        ease: 'power2.out',
+      },
     },
   });
 
   // ======================
-  // 🟢 SCREEN 1
+  // SCREEN 1
   // ======================
   tl.add(() => showText(0), 0);
-
-  // пауза (текст)
-  tl.to({}, { duration: 0.6 });
+  tl.to({}, { duration: 0.4 });
 
   // ======================
-  // 🔄 1 → 2
+  // 1 → 2
   // ======================
   tl.to(left, {
     x: 0,
-    rotate: 45,
+    rotate: -45,
     ease: 'none',
+    duration: 1,
   });
 
   tl.to(
     right,
     {
       x: 0,
-      rotate: -45,
+      rotate: 45,
       ease: 'none',
+      duration: 1,
     },
     '<',
   );
@@ -108,73 +143,95 @@ export const initMorph = () => {
     {
       scale: 0,
       opacity: 0,
-      ease: 'none',
+      duration: 0.6,
     },
     '<',
   );
 
-  // кольори екран 2
-  tl.to(
-    section,
-    {
-      backgroundColor: '#A9472C',
-      ease: 'none',
-    },
-    '<',
-  );
+  tl.to(section, { backgroundColor: '#A9472C' }, '<');
+  tl.to(hole, { backgroundColor: '#A9472C' }, '<');
 
   // ======================
-  // 🟡 SCREEN 2
+  // SCREEN 2
   // ======================
   tl.add(() => showText(1));
-  tl.to({}, { duration: 0.6 });
+  tl.to({}, { duration: 0.4 });
 
   // ======================
-  // 🔄 2 → 3
+  // 2 → 3
   // ======================
-  tl.to([left, right], {
-    scaleY: 0.08,
+  tl.to(center, { opacity: 0, scale: 0, duration: 0.2 });
+  tl.to(right, { opacity: 0, duration: 0.2 }, '<');
+
+  tl.to(left, {
+    scaleY: CONFIG.line.thickness,
+    duration: 0.6,
     ease: 'none',
   });
 
   tl.to(
-    [left, right],
+    left,
     {
-      scaleX: 5,
-      rotate: 45,
-      ease: 'none',
-    },
-    '<',
-  );
-
-  tl.to(left, { y: -10, ease: 'none' }, '<');
-  tl.to(right, { y: 10, ease: 'none' }, '<');
-
-  // кольори екран 3
-  tl.to(
-    section,
-    {
-      backgroundColor: '#E6D2B5',
+      scaleX: CONFIG.line.length,
+      duration: 0.8,
       ease: 'none',
     },
     '<',
   );
 
   tl.to(
-    '.section--morph h4, .section--morph p, .section-title, .screen-number',
+    left,
     {
-      color: '#A9472C',
+      rotate: CONFIG.line.angle,
+      duration: 0.6,
       ease: 'none',
     },
     '<',
   );
 
-  tl.to(center, { backgroundColor: '#A9472C' }, '<');
-  tl.to(right, { backgroundColor: '#A9472C' }, '<');
-  tl.to(left, { borderColor: '#A9472C' }, '<');
+  tl.to(
+    left,
+    {
+      y: CONFIG.line.offsetY,
+      duration: 0.6,
+      ease: 'none',
+    },
+    '<',
+  );
+
+  tl.to(
+    left,
+    {
+      skewX: CONFIG.line.skewX,
+      duration: 0.6,
+      ease: 'none',
+    },
+    '<',
+  );
 
   // ======================
-  // 🔴 SCREEN 3
+  // COLORS SCREEN 3
+  // ======================
+  tl.to(section, { backgroundColor: '#E6D2B5' }, '<');
+
+  tl.to('.section--morph h4, .section--morph p, .section-title, .screen-number', { color: '#A9472C' }, '<');
+
+  tl.to(left, { backgroundColor: '#A9472C' }, '<');
+
+  tl.to(
+    hole,
+    {
+      backgroundColor: '#A9472C',
+      duration: 0.8,
+    },
+    '<',
+  );
+
+  // ======================
+  // SCREEN 3
   // ======================
   tl.add(() => showText(2));
+
+  // 🔥 ФІКС: даємо місце для snap
+  tl.to({}, { duration: 1.8 });
 };
