@@ -1,3 +1,5 @@
+@use '../abstracts' as *;
+
 .image-reveal {
   position: relative;
   height: 100vh;
@@ -5,14 +7,56 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
+  color: $ivory;
 
-.image-reveal__mask {
-  width: 300px;
-  height: 400px;
-  overflow: hidden;
+  &__mask {
+    width: 250px;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 50% 50% 0 0;
+  }
 
-  border-radius: 50% 50% 0 0;
+  &__content {
+    position: absolute;
+    bottom: 33px;
+    max-height: 80%;
+    overflow: hidden;
+    z-index: 2;
+    left: 40px;
+    display: flex;
+    right: 40px;
+    gap: 20px;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  &__content-col {
+    width: 400px;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &__text-panel {
+    position: absolute;
+    top: 20px;
+    z-index: 2;
+    font-size: 16px;
+    font-weight: $font-weight-medium;
+    left: 40px;
+    right: 40px;
+    text-transform: capitalize;
+    max-height: 20%;
+    display: flex;
+    overflow: hidden;
+    justify-content: space-between;
+    gap: 10px;
+
+    p {
+      max-width: 50%;
+    }
+  }
 }
 
 .slider {
@@ -32,19 +76,7 @@
 }
 
 .slider img.active {
-  transform: scale(1.1); // 🔥 zoom тільки активної
-}
-
-/* текст + кнопка */
-.image-reveal__content {
-  position: absolute;
-  bottom: 100px;
-  z-index: 2;
-  left: 40px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  transform: scale(1.1);
 }
 
 .btn-wrap {

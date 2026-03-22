@@ -1,1 +1,38 @@
 @use '../abstracts' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  font-weight: $font-weight-medium;
+  border: 0;
+  background: $charcoal-brown;
+  color: $ivory;
+  min-height: 70px;
+  padding: 34px 15px 15px;
+  line-height: 1.2;
+  font-size: 14px;
+  min-width: 276px;
+  border-radius: 0;
+  border: 2px solid transparent;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+
+  &:hover {
+    border-color: $charcoal-brown;
+    background: $ivory;
+    color: $charcoal-brown;
+  }
+
+  &--light {
+    background: $ivory;
+    color: $charcoal-brown;
+
+    &:hover {
+      background: $charcoal-brown;
+      color: $ivory;
+      border-color: $ivory;
+    }
+  }
+}

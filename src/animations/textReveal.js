@@ -4,11 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export const initTextReveal = (selector, useScroll = true) => {
-  // 🔥 тепер можна передати NodeList або selector
   const elements = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
 
   elements.forEach(el => {
-    el.style.visibility = 'visible'; // 🔥 показуємо перед анімацією
+    el.style.visibility = 'visible';
 
     const text = el.textContent;
     el.innerHTML = '';
@@ -70,12 +69,10 @@ export const initTextReveal = (selector, useScroll = true) => {
       stagger: 0.08,
       ease: 'power4.out',
 
-      // 🔥 ГОЛОВНЕ: можна вимкнути ScrollTrigger
       ...(useScroll && {
         scrollTrigger: {
           trigger: el,
           start: 'top 85%',
-          markers: true,
         },
       }),
     });

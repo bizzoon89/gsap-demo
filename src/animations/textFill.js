@@ -44,7 +44,7 @@ export const initTextFill = selector => {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: el,
-        start: 'top 85%',
+        start: 'top 70%',
         end: 'top 35%',
         scrub: 1.5,
       },

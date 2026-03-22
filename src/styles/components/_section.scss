@@ -2,14 +2,42 @@
 
 .section {
   padding-top: 86px;
-  padding-bottom: 86px;
+  padding-bottom: 64px;
 
   &--about {
-    background: #e6d2b5;
+    background: $sand-beige;
   }
 
   &--slider {
-    background: #a9472c;
+    padding-top: 0;
+    padding-bottom: 0;
+    background: $terracotta-rust;
+
+    .container {
+      padding: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  &--hero {
+    min-height: 768px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
   }
 
   &__title {
@@ -30,9 +58,15 @@
     align-items: flex-start;
   }
 
+  &__text-col {
+    margin: 0 0 0 auto;
+    width: 512px;
+  }
+
   &__text-area {
     display: flex;
     padding-top: 104px;
+    align-items: flex-end;
   }
 
   &__image-box {

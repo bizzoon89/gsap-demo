@@ -4,9 +4,6 @@ import { initTextReveal } from './textReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// =========================
-// 🔥 SLIDER (active class)
-// =========================
 let sliderInterval;
 let index = 0;
 
@@ -16,7 +13,6 @@ function startSlider(container) {
 
   if (!slider || slides.length === 0) return;
 
-  // 🔥 перший активний
   slides.forEach(img => img.classList.remove('active'));
   slides[0].classList.add('active');
   index = 0;
@@ -24,14 +20,12 @@ function startSlider(container) {
   sliderInterval = setInterval(() => {
     index = (index + 1) % slides.length;
 
-    // рухаємо трек
     gsap.to(slider, {
       xPercent: -100 * index,
       duration: 0.6,
       ease: 'power2.out',
     });
 
-    // міняємо active
     slides.forEach(img => img.classList.remove('active'));
     slides[index].classList.add('active');
   }, 3000);
@@ -41,27 +35,24 @@ function stopSlider(container) {
   clearInterval(sliderInterval);
   index = 0;
 
+  const slider = container.querySelector('.slider');
   const slides = container.querySelectorAll('.slider img');
+
+  gsap.set(slider, { xPercent: 0 });
   slides.forEach(img => img.classList.remove('active'));
 }
 
-// =========================
-// 🔥 MAIN
-// =========================
 export const initImageReveal = selector => {
   const elements = document.querySelectorAll(selector);
 
   elements.forEach(el => {
     const mask = el.querySelector('.image-reveal__mask');
-    const slider = el.querySelector('.slider');
     const texts = el.querySelectorAll('.js-image-text');
     const buttonWrap = el.querySelector('.btn-wrap');
 
-    let textStarted = false;
     let sliderStarted = false;
     let buttonTimeout;
 
-    // стартові стани
     gsap.set(buttonWrap, { opacity: 0, y: 30 });
 
     const tl = gsap.timeline({
@@ -72,53 +63,16 @@ export const initImageReveal = selector => {
         scrub: 1.2,
         pin: true,
         anticipatePin: 1,
-        markers: true,
 
         onUpdate: self => {
           const p = self.progress;
 
-          // ===== TEXT =====
-          if (p > 0.35 && !textStarted) {
-            textStarted = true;
-
-            initTextReveal(texts, false);
-
-            buttonTimeout = setTimeout(() => {
-              gsap.to(buttonWrap, {
-                opacity: 1,
-                y: 0,
-                duration: 0.5,
-                ease: 'power3.out',
-              });
-            }, 600);
-          }
-
-          if (p < 0.35 && textStarted) {
-            textStarted = false;
-
-            clearTimeout(buttonTimeout);
-
-            gsap.set(el.querySelectorAll('.text-line__inner'), {
-              y: 100,
-            });
-
-            texts.forEach(t => {
-              t.style.visibility = 'hidden';
-            });
-
-            gsap.set(buttonWrap, {
-              opacity: 0,
-              y: 30,
-            });
-          }
-
-          // ===== SLIDER =====
-          if (p > 0.7 && !sliderStarted) {
+          if (p > 0.75 && !sliderStarted) {
             sliderStarted = true;
             startSlider(el);
           }
 
-          if (p < 0.7 && sliderStarted) {
+          if (p < 0.75 && sliderStarted) {
             sliderStarted = false;
             stopSlider(el);
           }
@@ -130,20 +84,63 @@ export const initImageReveal = selector => {
     tl.to(mask, {
       width: '100%',
       height: '100%',
-      duration: 0.9,
+      duration: 1,
       ease: 'power3.out',
     });
 
-    // ===== BORDER RADIUS В КІНЦІ =====
+    // 🔹 точка відкриття
+    tl.addLabel('opened');
+
+    // ===== TEXT SHOW =====
+    tl.call(
+      () => {
+        initTextReveal(texts, false);
+
+        buttonTimeout = setTimeout(() => {
+          gsap.to(buttonWrap, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: 'power3.out',
+          });
+        }, 600);
+      },
+      null,
+      'opened',
+    );
+
+    // ===== TEXT HIDE (першим!) =====
+    tl.call(
+      () => {
+        clearTimeout(buttonTimeout);
+
+        gsap.set(el.querySelectorAll('.text-line__inner'), {
+          y: 100,
+        });
+
+        texts.forEach(t => {
+          t.style.visibility = 'hidden';
+        });
+
+        gsap.set(buttonWrap, {
+          opacity: 0,
+          y: 30,
+        });
+      },
+      null,
+      'opened-=0.02',
+    ); // 👈 майже впритик
+
+    // ===== BORDER (після text hide) =====
     tl.to(
       mask,
       {
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        duration: 0.3,
+        duration: 0.4,
         ease: 'power4.out',
       },
-      0.85,
+      'opened+=0.25', // 👈 ключ
     );
   });
 };
