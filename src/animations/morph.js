@@ -74,7 +74,7 @@ export const initMorph = () => {
     const inner = el.querySelectorAll('.js-morph-animate');
     initTextReveal(inner, false);
 
-    number.textContent = `0${i + 1}`;
+    number.textContent = `${i + 1}`;
   };
 
   // ======================
@@ -88,7 +88,6 @@ export const initMorph = () => {
       scrub: 1,
       pin: true,
 
-      // 🔥 TITLE — тільки 1 раз
       onEnter: () => {
         if (!titleShown) {
           initTextReveal([title], false);
@@ -98,7 +97,6 @@ export const initMorph = () => {
         showText(0);
       },
 
-      // 🔥 сцени
       onUpdate: self => {
         const p = self.progress;
 
@@ -111,7 +109,6 @@ export const initMorph = () => {
         }
       },
 
-      // 🔥 НЕ ХОВАЄМО title
       onLeaveBack: () => {
         texts.forEach(t => gsap.set(t, { autoAlpha: 0 }));
         current = -1;

@@ -81,14 +81,20 @@ export const initImageReveal = selector => {
     });
 
     // ===== IMAGE OPEN =====
-    tl.to(mask, {
-      width: '100%',
-      height: '100%',
-      duration: 1,
-      ease: 'power3.out',
-    });
+    tl.fromTo(
+      mask,
+      {
+        width: 250,
+        height: 320,
+      },
+      {
+        width: () => el.clientWidth,
+        height: () => el.clientHeight,
+        duration: 1,
+        ease: 'power3.out',
+      },
+    );
 
-    // 🔹 точка відкриття
     tl.addLabel('opened');
 
     // ===== TEXT SHOW =====
@@ -129,9 +135,9 @@ export const initImageReveal = selector => {
       },
       null,
       'opened-=0.02',
-    ); // 👈 майже впритик
+    );
 
-    // ===== BORDER (після text hide) =====
+    // ===== BORDER =====
     tl.to(
       mask,
       {
@@ -140,7 +146,7 @@ export const initImageReveal = selector => {
         duration: 0.4,
         ease: 'power4.out',
       },
-      'opened+=0.25', // 👈 ключ
+      'opened+=0.25',
     );
   });
 };

@@ -4,10 +4,6 @@
 @use 'sass:string';
 @use 'sass:map';
 
-//
-// @functions
-//
-
 @function parse-media($query) {
   $operators: ('>=', '<=', '>', '<');
 

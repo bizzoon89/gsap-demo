@@ -1,3 +1,5 @@
+@use '../abstracts' as *;
+
 .section--morph {
   position: relative;
   height: 100vh;
@@ -7,6 +9,15 @@
 
 .section-title {
   visibility: hidden;
+  max-width: 350px;
+  overflow: hidden;
+  word-wrap: nowrap;
+  font-size: 30px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  position: absolute;
+  top: 38px;
+  left: 42px;
 }
 
 .morph-stage {
@@ -50,11 +61,25 @@
   background: #e6d2b5;
 }
 
-.js-morph-text {
+.morph-text {
   position: absolute;
-  width: 100%;
-  top: 70%;
+  bottom: 0;
   left: 0;
+  max-width: 350px;
+
+  .text {
+    width: 350px;
+    position: absolute;
+    bottom: 42px;
+    left: 42px;
+  }
+
+  .text-line__inner {
+    text-align: left;
+  }
+}
+
+.js-morph-text {
   text-align: center;
   opacity: 0;
   visibility: hidden;
@@ -62,8 +87,10 @@
 
 .screen-number {
   position: absolute;
-  top: 40px;
-  right: 40px;
-  font-size: 120px;
-  color: #f9f0e8;
+  top: 5px;
+  right: 5px;
+  font-size: 300px;
+  line-height: 1;
+  font-weight: $font-weight-medium;
+  color: $ivory;
 }
