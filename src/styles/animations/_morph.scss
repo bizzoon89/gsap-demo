@@ -11,18 +11,29 @@
   visibility: hidden;
   max-width: 350px;
   overflow: hidden;
-  word-wrap: nowrap;
-  font-size: 30px;
+  white-space: nowrap;
   line-height: 1.2;
   text-overflow: ellipsis;
   position: absolute;
-  top: 38px;
-  left: 42px;
+  left: 16px;
+  top: 25px;
+  font-size: 22px;
+
+  @include media('>=tablet') {
+    font-size: 30px;
+    left: 42px;
+    top: 38px;
+  }
 }
 
 .morph-stage {
   position: relative;
   height: 500px;
+  transform: scale(0.5);
+
+  @include media('>=tablet') {
+    transform: scale(1);
+  }
 }
 
 .shape {
@@ -68,10 +79,22 @@
   max-width: 350px;
 
   .text {
-    width: 350px;
     position: absolute;
-    bottom: 42px;
-    left: 42px;
+    width: 300px;
+    left: 16px;
+    bottom: 3px;
+    line-height: 1.5;
+
+    @include media('>=tablet') {
+      width: 350px;
+      left: 42px;
+      line-height: 1.7;
+      bottom: 20px;
+    }
+
+    @include media('>=desktop') {
+      bottom: 42px;
+    }
   }
 
   .text-line__inner {
@@ -87,10 +110,22 @@
 
 .screen-number {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  font-size: 300px;
   line-height: 1;
   font-weight: $font-weight-medium;
   color: $ivory;
+  font-size: 158px;
+  right: 10px;
+  top: 0;
+  display: inline-block;
+  will-change: transform;
+
+  @include media('>=tablet') {
+    top: 5px;
+    right: 5px;
+    font-size: 250px;
+  }
+
+  @include media('>=desktop') {
+    font-size: 300px;
+  }
 }

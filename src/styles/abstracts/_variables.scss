@@ -8,10 +8,10 @@
 
 $breakpoints: (
   'xs-phone': 360px,
-  'phone': 580px,
+  'phone': 393px,
   'tablet': 768px,
   'desktop': 1024px,
-  'laptop': 1480px,
+  'laptop': 1440px,
   'widescreen': 1920px,
 );
 
@@ -52,7 +52,7 @@ $body-color: $charcoal-brown;
 
 $link-color: $sand-beige;
 $link-decoration: none;
-$link-hover-color: red; /* stylelint-disable-line */
+$link-hover-color: $terracotta-rust; /* stylelint-disable-line */
 $link-hover-decoration: none;
 
 // border radius
@@ -90,7 +90,7 @@ $font-sizes: (
 
 $headings-sizes: (
   'h1': 70px,
-  'h2': 50px,
+  'h2': 35px,
   'h3': 35px,
   'h4': 22px,
   'h5': 16px,

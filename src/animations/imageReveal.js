@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 let sliderInterval;
 let index = 0;
 
+// ================= SLIDER =================
 function startSlider(container) {
   const slider = container.querySelector('.slider');
   const slides = container.querySelectorAll('.slider img');
@@ -38,10 +39,13 @@ function stopSlider(container) {
   const slider = container.querySelector('.slider');
   const slides = container.querySelectorAll('.slider img');
 
+  if (!slider) return;
+
   gsap.set(slider, { xPercent: 0 });
   slides.forEach(img => img.classList.remove('active'));
 }
 
+// ================= MAIN =================
 export const initImageReveal = selector => {
   const elements = document.querySelectorAll(selector);
 
@@ -49,6 +53,8 @@ export const initImageReveal = selector => {
     const mask = el.querySelector('.image-reveal__mask');
     const texts = el.querySelectorAll('.js-image-text');
     const buttonWrap = el.querySelector('.btn-wrap');
+
+    if (!mask) return;
 
     let sliderStarted = false;
     let buttonTimeout;
@@ -62,21 +68,9 @@ export const initImageReveal = selector => {
         end: '+=2000',
         scrub: 1.2,
         pin: true,
+        pinSpacing: true,
         anticipatePin: 1,
-
-        onUpdate: self => {
-          const p = self.progress;
-
-          if (p > 0.75 && !sliderStarted) {
-            sliderStarted = true;
-            startSlider(el);
-          }
-
-          if (p < 0.75 && sliderStarted) {
-            sliderStarted = false;
-            stopSlider(el);
-          }
-        },
+        invalidateOnRefresh: true, // 🔥 фікс resize
       },
     });
 
@@ -88,8 +82,8 @@ export const initImageReveal = selector => {
         height: 320,
       },
       {
-        width: () => el.clientWidth,
-        height: () => el.clientHeight,
+        width: () => el.offsetWidth, // 🔥 стабільніше
+        height: () => el.offsetHeight, // 🔥 стабільніше
         duration: 1,
         ease: 'power3.out',
       },
@@ -115,7 +109,7 @@ export const initImageReveal = selector => {
       'opened',
     );
 
-    // ===== TEXT HIDE (першим!) =====
+    // ===== TEXT HIDE =====
     tl.call(
       () => {
         clearTimeout(buttonTimeout);
@@ -148,5 +142,29 @@ export const initImageReveal = selector => {
       },
       'opened+=0.25',
     );
+
+    // ===== SLIDER CONTROL =====
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top top',
+      end: '+=2000',
+      onUpdate: self => {
+        const p = self.progress;
+
+        if (p > 0.75 && !sliderStarted) {
+          sliderStarted = true;
+          startSlider(el);
+        }
+
+        if (p < 0.75 && sliderStarted) {
+          sliderStarted = false;
+          stopSlider(el);
+        }
+      },
+    });
   });
 };
+
+window.addEventListener('resize', () => {
+  ScrollTrigger.refresh();
+});

@@ -20,7 +20,12 @@ body {
   width: 100%;
   margin-right: auto;
   margin-left: auto;
-  padding-left: 40px;
-  padding-right: 40px;
+  padding-left: 16px;
+  padding-right: 16px;
   max-width: calc(1360px + 80px);
+
+  @include media('>=tablet') {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }

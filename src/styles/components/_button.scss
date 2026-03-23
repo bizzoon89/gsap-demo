@@ -14,10 +14,15 @@
   min-width: 276px;
   border-radius: 0;
   border: 2px solid transparent;
+  width: 100%;
   transition:
     background 0.3s ease,
     color 0.3s ease,
     border-color 0.3s ease;
+
+  @include media('>=tablet') {
+    width: auto;
+  }
 
   &:hover {
     border-color: $charcoal-brown;

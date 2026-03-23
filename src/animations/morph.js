@@ -26,7 +26,7 @@ export const initMorph = () => {
       offsetY: -20,
       skewX: -50,
     },
-    scroll: 4500,
+    scroll: 3600,
   };
 
   let current = -1;
@@ -74,7 +74,34 @@ export const initMorph = () => {
     const inner = el.querySelectorAll('.js-morph-animate');
     initTextReveal(inner, false);
 
-    number.textContent = `${i + 1}`;
+    const newValue = `${i + 1}`;
+
+    if (number.textContent === newValue) return;
+
+    gsap.to(number, {
+      x: -20,
+      opacity: 0,
+      duration: 0.25,
+      delay: 0.25,
+      ease: 'power2.in',
+      onComplete: () => {
+        number.textContent = newValue;
+
+        gsap.fromTo(
+          number,
+          {
+            x: 20,
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.25,
+            ease: 'power2.out',
+          },
+        );
+      },
+    });
   };
 
   // ======================

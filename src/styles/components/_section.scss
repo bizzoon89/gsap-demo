@@ -1,8 +1,18 @@
 @use '../abstracts' as *;
 
 .section {
-  padding-top: 86px;
-  padding-bottom: 64px;
+  padding-top: 70px;
+  padding-bottom: 40px;
+
+  @include media('>=desktop') {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  @include media('>=laptop') {
+    padding-top: 86px;
+    padding-bottom: 64px;
+  }
 
   &--about {
     background: $sand-beige;
@@ -12,6 +22,7 @@
     padding-top: 0;
     padding-bottom: 0;
     background: $terracotta-rust;
+    min-height: 480px;
 
     .container {
       padding: 0;
@@ -23,19 +34,30 @@
 
   &--morph {
     padding-top: 30px;
+    min-height: 614px;
 
     .container {
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
   }
 
+  &__holder {
+    position: absolute;
+    inset: 0;
+  }
+
   &--hero {
-    min-height: 768px;
+    min-height: 320px;
     position: relative;
     z-index: 1;
+
+    @include media('>=laptop') {
+      min-height: 768px;
+    }
   }
 
   &__bg {
@@ -52,11 +74,21 @@
   }
 
   &__title {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.2;
-    padding-top: 15px;
     font-weight: $font-weight-medium;
     max-width: 50%;
+    display: block;
+    margin-bottom: 42px;
+
+    @include media('>=tablet') {
+      padding-top: 5px;
+      font-size: 18px;
+    }
+
+    @include media('>=laptop') {
+      padding-top: 15px;
+    }
 
     &::before {
       content: '/';
@@ -65,28 +97,61 @@
   }
 
   &__text-wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    @include media('>=tablet') {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
   }
 
   &__text-col {
-    margin: 0 0 0 auto;
-    width: 512px;
+    @include media('>=tablet') {
+      margin: 0 0 0 auto;
+      width: 400px;
+    }
+
+    @include media('>=desktop') {
+      width: 512px;
+    }
   }
 
   &__text-area {
-    display: flex;
-    padding-top: 104px;
-    align-items: flex-end;
+    padding-top: 112px;
+
+    @include media('>=tablet') {
+      display: flex;
+      padding-top: 60px;
+      align-items: flex-end;
+    }
+
+    @include media('>=desktop') {
+      padding-top: 80px;
+    }
+
+    @include media('>=laptop') {
+      padding-top: 104px;
+    }
   }
 
   &__image-box {
-    max-width: 265px;
+    height: 362px;
+    overflow: hidden;
+    margin-bottom: 40px;
+
+    @include media('>=tablet') {
+      max-width: 265px;
+      margin-bottom: 0;
+      height: auto;
+    }
 
     img {
       max-width: 100%;
       width: auto;
+      display: block;
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
       vertical-align: top;
     }
   }

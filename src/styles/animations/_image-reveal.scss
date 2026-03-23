@@ -21,23 +21,35 @@
 
   &__content {
     position: absolute;
-    bottom: 33px;
-    max-height: 80%;
     overflow: hidden;
     z-index: 2;
-    left: 40px;
-    display: flex;
-    right: 40px;
     gap: 20px;
-    align-items: flex-end;
-    justify-content: space-between;
+    left: 16px;
+    right: 16px;
+    bottom: 20px;
+
+    @include media('>=tablet') {
+      bottom: 33px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      max-height: 80%;
+      left: 40px;
+      right: 40px;
+    }
   }
 
   &__content-col {
-    width: 420px;
+    @include media('>=tablet') {
+      width: 420px;
+    }
 
     p {
-      margin-bottom: 0;
+      margin-bottom: 40px;
+
+      @include media('>=tablet') {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -45,18 +57,35 @@
     position: absolute;
     top: 20px;
     z-index: 2;
-    font-size: 16px;
     font-weight: $font-weight-medium;
-    left: 40px;
-    right: 40px;
+    left: 16px;
+    right: 16px;
     max-height: 20%;
     display: flex;
     overflow: hidden;
     justify-content: space-between;
-    gap: 10px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    gap: 7px;
+
+    @include media('>=tablet') {
+      font-size: 16px;
+      left: 40px;
+      right: 40px;
+      gap: 20px;
+    }
 
     p {
-      max-width: 50%;
+      margin-bottom: 0;
+      width: 100%;
+
+      @include media('>=tablet') {
+        width: calc(50% - 10px);
+      }
+
+      &:last-child {
+        text-align: right;
+      }
     }
   }
 }
