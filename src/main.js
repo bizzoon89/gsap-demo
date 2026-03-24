@@ -9,21 +9,18 @@ import { initMorph } from './animations/morph';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// 🔥 стабільність
 ScrollTrigger.config({
   ignoreMobileResize: true,
 });
 
 window.addEventListener('load', () => {
-  const loader = document.querySelector('.page-loader');
-
-  // 👉 ініт анімацій
   initTextFill('.js-text-fill');
   initTextReveal('.js-text-reveal');
   initImageReveal('.js-image-reveal');
   initMorph();
 
-  // 👉 плавне зникнення loader
+  const loader = document.querySelector('.page-loader');
+
   if (loader) {
     gsap.to(loader, {
       opacity: 0,
@@ -33,7 +30,6 @@ window.addEventListener('load', () => {
       onComplete: () => {
         loader.style.display = 'none';
 
-        // 🔥 дуже важливо
         ScrollTrigger.refresh();
       },
     });

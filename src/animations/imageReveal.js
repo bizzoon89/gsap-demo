@@ -70,7 +70,7 @@ export const initImageReveal = selector => {
         pin: true,
         pinSpacing: true,
         anticipatePin: 1,
-        invalidateOnRefresh: true, // 🔥 фікс resize
+        invalidateOnRefresh: true,
       },
     });
 
@@ -82,8 +82,8 @@ export const initImageReveal = selector => {
         height: 320,
       },
       {
-        width: () => el.offsetWidth, // 🔥 стабільніше
-        height: () => el.offsetHeight, // 🔥 стабільніше
+        width: () => el.offsetWidth,
+        height: () => el.offsetHeight,
         duration: 1,
         ease: 'power3.out',
       },
