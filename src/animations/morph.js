@@ -62,14 +62,16 @@ export const initMorph = () => {
   // ======================
   const showText = i => {
     if (current === i) return;
+
+    const prev = current;
     current = i;
 
-    texts.forEach(t => {
-      gsap.set(t, { autoAlpha: 0 });
-    });
+    if (prev >= 0 && texts[prev]) {
+      gsap.set(texts[prev], { autoAlpha: 0 });
+    }
 
     const el = texts[i];
-    gsap.set(el, { autoAlpha: 1 });
+    if (el) gsap.set(el, { autoAlpha: 1 });
 
     const inner = el.querySelectorAll('.js-morph-animate');
     initTextReveal(inner, false);
@@ -121,6 +123,23 @@ export const initMorph = () => {
           titleShown = true;
         }
 
+        // `initTextReveal` rebuilds/animates inner lines, but `onLeaveBack`
+        // may have set `autoAlpha: 0` on the whole title element.
+        if (title) gsap.set(title, { autoAlpha: 1 });
+
+        showText(0);
+      },
+
+      // When scrolling back down after `onLeaveBack`,
+      // ScrollTrigger may call `onEnterBack` instead of `onEnter`.
+      onEnterBack: () => {
+        if (!titleShown) {
+          initTextReveal([title], false);
+          titleShown = true;
+        }
+
+        if (title) gsap.set(title, { autoAlpha: 1 });
+
         showText(0);
       },
 
@@ -139,6 +158,13 @@ export const initMorph = () => {
       onLeaveBack: () => {
         texts.forEach(t => gsap.set(t, { autoAlpha: 0 }));
         current = -1;
+
+        // Reset title state so it can be prepared/animated again.
+        titleShown = false;
+        if (title) {
+          title.style.visibility = 'hidden';
+          gsap.set(title, { autoAlpha: 0 });
+        }
       },
 
       snap: false,

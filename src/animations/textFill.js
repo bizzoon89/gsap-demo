@@ -1,11 +1,30 @@
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-export const initTextFill = selector => {
+gsap.registerPlugin(ScrollTrigger);
+
+const normalizeText = text => text.replace(/\s+/g, ' ').trim();
+
+export const initTextFill = (selector, { force = false } = {}) => {
   const elements = document.querySelectorAll(selector);
 
   elements.forEach(el => {
+    if (!el) return;
+
+    if (!el.dataset.textFillOriginal) {
+      el.dataset.textFillOriginal = normalizeText(el.innerText);
+    }
+
+    const shouldRebuild = force || el.dataset.textFillDirty === '1' || el.dataset.textFillBuilt !== '1';
+    if (!shouldRebuild) return;
+
     const text = el.innerText;
-    const words = text.split(' ');
+    const words = (el.dataset.textFillOriginal || text).split(' ');
+
+    // If we rebuild, remove previous ScrollTriggers for this element first.
+    ScrollTrigger.getAll().forEach(st => {
+      if (st.trigger === el) st.kill();
+    });
 
     el.innerHTML = '';
 
@@ -67,5 +86,8 @@ export const initTextFill = selector => {
         i * 0.15,
       );
     });
+
+    el.dataset.textFillBuilt = '1';
+    el.dataset.textFillDirty = '0';
   });
 };

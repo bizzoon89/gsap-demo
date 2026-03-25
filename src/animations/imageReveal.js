@@ -4,47 +4,6 @@ import { initTextReveal } from './textReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
-let sliderInterval;
-let index = 0;
-
-// ================= SLIDER =================
-function startSlider(container) {
-  const slider = container.querySelector('.slider');
-  const slides = container.querySelectorAll('.slider img');
-
-  if (!slider || slides.length === 0) return;
-
-  slides.forEach(img => img.classList.remove('active'));
-  slides[0].classList.add('active');
-  index = 0;
-
-  sliderInterval = setInterval(() => {
-    index = (index + 1) % slides.length;
-
-    gsap.to(slider, {
-      xPercent: -100 * index,
-      duration: 0.6,
-      ease: 'power2.out',
-    });
-
-    slides.forEach(img => img.classList.remove('active'));
-    slides[index].classList.add('active');
-  }, 3000);
-}
-
-function stopSlider(container) {
-  clearInterval(sliderInterval);
-  index = 0;
-
-  const slider = container.querySelector('.slider');
-  const slides = container.querySelectorAll('.slider img');
-
-  if (!slider) return;
-
-  gsap.set(slider, { xPercent: 0 });
-  slides.forEach(img => img.classList.remove('active'));
-}
-
 // ================= MAIN =================
 export const initImageReveal = selector => {
   const elements = document.querySelectorAll(selector);
@@ -55,6 +14,43 @@ export const initImageReveal = selector => {
     const buttonWrap = el.querySelector('.btn-wrap');
 
     if (!mask) return;
+
+    // ================= SLIDER (per container) =================
+    let sliderInterval;
+    let index = 0;
+
+    const slider = el.querySelector('.slider');
+    const slides = el.querySelectorAll('.slider img');
+
+    const startSlider = () => {
+      if (!slider || slides.length === 0) return;
+
+      slides.forEach(img => img.classList.remove('active'));
+      slides[0].classList.add('active');
+      index = 0;
+
+      sliderInterval = setInterval(() => {
+        index = (index + 1) % slides.length;
+
+        gsap.to(slider, {
+          xPercent: -100 * index,
+          duration: 0.6,
+          ease: 'power2.out',
+        });
+
+        slides.forEach(img => img.classList.remove('active'));
+        slides[index].classList.add('active');
+      }, 3000);
+    };
+
+    const stopSlider = () => {
+      clearInterval(sliderInterval);
+      index = 0;
+
+      if (!slider) return;
+      gsap.set(slider, { xPercent: 0 });
+      slides.forEach(img => img.classList.remove('active'));
+    };
 
     let sliderStarted = false;
     let buttonTimeout;
@@ -144,6 +140,7 @@ export const initImageReveal = selector => {
     );
 
     // ===== SLIDER CONTROL =====
+    // Keep slider behavior stable: start/stop based on progress threshold.
     ScrollTrigger.create({
       trigger: el,
       start: 'top top',
@@ -153,18 +150,14 @@ export const initImageReveal = selector => {
 
         if (p > 0.75 && !sliderStarted) {
           sliderStarted = true;
-          startSlider(el);
+          startSlider();
         }
 
         if (p < 0.75 && sliderStarted) {
           sliderStarted = false;
-          stopSlider(el);
+          stopSlider();
         }
       },
     });
   });
 };
-
-window.addEventListener('resize', () => {
-  ScrollTrigger.refresh();
-});

@@ -19,6 +19,17 @@ window.addEventListener('load', () => {
   initImageReveal('.js-image-reveal');
   initMorph();
 
+  // Rebuild text splitting on resize (line breaks + clip-path depend on layout).
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      ScrollTrigger.refresh();
+      initTextFill('.js-text-fill', { force: true });
+      initTextReveal('.js-text-reveal', true, { force: true });
+    }, 150);
+  });
+
   const loader = document.querySelector('.page-loader');
 
   if (loader) {
