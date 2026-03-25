@@ -24,7 +24,6 @@ export const initTextReveal = (selector, useScroll = true, { force = false } = {
     if (shouldRebuild) {
       const text = el.dataset.textRevealOriginal;
 
-      // Expensive part: split words + rebuild DOM into .text-line__inner spans.
       el.innerHTML = '';
 
       const words = text.split(' ').map(word => {
@@ -34,7 +33,6 @@ export const initTextReveal = (selector, useScroll = true, { force = false } = {
       });
 
       words.forEach(word => el.appendChild(word));
-      // Force layout for accurate offsetTop measurements.
       el.offsetHeight;
 
       const lines = [];
@@ -82,19 +80,16 @@ export const initTextReveal = (selector, useScroll = true, { force = false } = {
     } else {
       lineInners = el.querySelectorAll('.text-line__inner');
       if (!lineInners || lineInners.length === 0) {
-        // If DOM was unexpectedly not prepared, rebuild once.
         el.dataset.textRevealDirty = '1';
         initTextReveal([el], useScroll, { force: true });
         return;
       }
     }
 
-    // Re-animate without rewriting DOM.
     gsap.killTweensOf(lineInners);
     gsap.set(lineInners, { y: 100 });
 
     if (useScroll) {
-      // Avoid duplicate ScrollTriggers on rebuild/resize.
       ScrollTrigger.getAll().forEach(st => {
         if (st.trigger === el) st.kill();
       });

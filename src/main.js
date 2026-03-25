@@ -19,7 +19,6 @@ window.addEventListener('load', () => {
   initImageReveal('.js-image-reveal');
   initMorph();
 
-  // Rebuild text splitting on resize (line breaks + clip-path depend on layout).
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);

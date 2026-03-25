@@ -123,15 +123,11 @@ export const initMorph = () => {
           titleShown = true;
         }
 
-        // `initTextReveal` rebuilds/animates inner lines, but `onLeaveBack`
-        // may have set `autoAlpha: 0` on the whole title element.
         if (title) gsap.set(title, { autoAlpha: 1 });
 
         showText(0);
       },
 
-      // When scrolling back down after `onLeaveBack`,
-      // ScrollTrigger may call `onEnterBack` instead of `onEnter`.
       onEnterBack: () => {
         if (!titleShown) {
           initTextReveal([title], false);
@@ -159,7 +155,6 @@ export const initMorph = () => {
         texts.forEach(t => gsap.set(t, { autoAlpha: 0 }));
         current = -1;
 
-        // Reset title state so it can be prepared/animated again.
         titleShown = false;
         if (title) {
           title.style.visibility = 'hidden';

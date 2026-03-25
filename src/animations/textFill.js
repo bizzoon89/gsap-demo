@@ -21,7 +21,6 @@ export const initTextFill = (selector, { force = false } = {}) => {
     const text = el.innerText;
     const words = (el.dataset.textFillOriginal || text).split(' ');
 
-    // If we rebuild, remove previous ScrollTriggers for this element first.
     ScrollTrigger.getAll().forEach(st => {
       if (st.trigger === el) st.kill();
     });

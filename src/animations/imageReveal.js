@@ -140,7 +140,6 @@ export const initImageReveal = selector => {
     );
 
     // ===== SLIDER CONTROL =====
-    // Keep slider behavior stable: start/stop based on progress threshold.
     ScrollTrigger.create({
       trigger: el,
       start: 'top top',
